@@ -18,6 +18,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        navigationItem.leftBarButtonItem = editButtonItem
         loadNotes()
         setupTableView()
     }
@@ -26,6 +27,12 @@ class ViewController: UIViewController {
         tableView.reloadData()
         save()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        save()
+    }
+    
     func loadNotes() {
         noteController.fetchNotes { notes in
             if let notes = notes {
@@ -45,7 +52,7 @@ class ViewController: UIViewController {
     
     func setupTableView() {
         tableView.layer.cornerRadius = 20
-        tableView.backgroundColor = .systemGray4
+        tableView.backgroundColor = .systemGray6
     }
     // MARK: - Navigation
 
@@ -67,6 +74,20 @@ class ViewController: UIViewController {
 
 // MARK: - TableView data source
 extension ViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            notes.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let movedNote = notes.remove(at: sourceIndexPath.row)
+        notes.insert(movedNote, at: destinationIndexPath.row)
+        tableView.reloadData()
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
@@ -81,7 +102,7 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .systemGray4
+        cell.backgroundColor = .systemGray6
         
         let note = notes[indexPath.row]
         
