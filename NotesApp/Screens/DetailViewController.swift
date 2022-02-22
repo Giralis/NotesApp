@@ -38,7 +38,7 @@ class DetailViewController: UIViewController {
         if notification.name == UIResponder.keyboardWillHideNotification {
             bodyTextView.contentInset = .zero
         } else {
-            bodyTextView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame - view.safeAreaInsets.bottom, right: 0)
+            bodyTextView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height - view.safeAreaInsets.bottom, right: 0)
         }
         bodyTextView.scrollIndicatorInsets = bodyTextView.contentInset
         
